@@ -35,6 +35,14 @@ A simple and not production ready file server can be started using
 npm run fileserver
 ```
 
+## Build
+
+To build the application we're using [Rollup](https://rollupjs.org/guide/en/). A bundler is definitely required in more complex applications. So to prevent possible later integrations of `webpack` (because it's slow), `rollup` has been added by default.
+
+```
+npm run build
+```
+
 ## Documentation
 
 For documentation purposes I added [swagger](https://swagger.io/). If you run the dev server you can look at it and try the routes at http://localhost:3000/swagger.
