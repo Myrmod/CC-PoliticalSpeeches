@@ -85,8 +85,9 @@ function evaluateSpeeches(
   let leastWords = Number.MAX_SAFE_INTEGER
   const speechCounter: Record<string, number> = {}
   const topicCounter: Record<string, number> = {}
+  const wordPerSpeaker: Record<string, number> = {}
   speeches.forEach(speech => {
-    try {
+    try {      
       // count speeches of speaker
       if (speech.Date.includes(filteredYear)) {
         // we don't need to convert to a date
@@ -108,9 +109,10 @@ function evaluateSpeeches(
       }
 
       // get speaker with fewest words
-      if (leastWords > Number(speech.Words)) {
-        result.leastWordy = speech.Speaker
-        leastWords = Number(speech.Words)
+      if (!wordPerSpeaker[speech.Speaker]) {
+        wordPerSpeaker[speech.Speaker] = Number(speech.Words)
+      } else {
+        wordPerSpeaker[speech.Speaker] += Number(speech.Words)
       }
     } catch (error) {
       console.warn(error)
@@ -121,14 +123,23 @@ function evaluateSpeeches(
   Object.entries(speechCounter).forEach(([speaker, speeches]) => {
     if (currentMostSomething < speeches) {
       currentMostSomething = speeches
-      result.mostSpeeches = speaker
+      result.mostSpeeches = speaker      
     }
   })
 
+  currentMostSomething = -1
   Object.entries(topicCounter).forEach(([speaker, speeches]) => {
     if (currentMostSomething < speeches) {
       currentMostSomething = speeches
       result.mostSecurity = speaker
+    }
+  })
+
+  currentMostSomething = Number.MAX_SAFE_INTEGER
+  Object.entries(wordPerSpeaker).forEach(([speaker, words]) => {
+    if (currentMostSomething > words) {
+      currentMostSomething = words
+      result.leastWordy = speaker
     }
   })
 
